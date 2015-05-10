@@ -1,104 +1,86 @@
-% read data in
+
 T = readtable('sp500.csv');
+dates = datenum(table2array(T(:,1)),'dd/mm/yyyy');
+data = T.Index;
+myfts = fints(dates, data);
 
-Index = table2array(T(:,{'Index'}));
+%%
+str1 = '12/30/1927::12/31/1929';
+str2 = '01/01/2008::12/31/2008';
+fts_window  = myfts(str2);
 
+
+%%
+y = fts2mat(fts_window.series1);
+prev = y(1);
+y(1) = [];
+logret = [log(y(1)) - log(prev); diff(log(y))];
+
+LEN = length(y);
+x = (0:LEN-1)'/(LEN-1);
+index = y;
+
+%%
+f=fit(x,y,'poly1');
+
+%%
 figure
-%subplot(2,1,2)
-prc = Index(end-10*250:end)
-L = length(prc)
-TimeInYear = (0:(L-1))/250 + 2005;
-plot(TimeInYear, prc)
-title('Last 10 years')
+plot(f, x, y);
+y = y - f(x);
 
-%% 
+%%
+f=fit(x,y,'exp1');
 
-yr = 3; %3 years back data look linear and cyclical
-Y = Index(end-yr*250:end);
-L = length(Y);
-
-X = ones(L, 2);
-X(:,2) = 0:(L-1);
-%time normalized into yr
-X(:,2) = X(:,2)/250;
-beta = X\Y;
-
-
-TimeInYear = X(:,2)
+%%
 figure
-subplot(2,1,1)
-plot(TimeInYear,Y,'b')
-title('Last 3 Years')
-hold on
-plot(TimeInYear,X*beta,'r')
-subplot(2,1,2)
-Y_det = Y - X*beta; % detrend
-plot(TimeInYear, Y_det,'.b')
-title('Last 3 Years - Detrend')
+plot(f, x, y);
+y = y - f(x);
 
-%% 
-%See http://uk.mathworks.com/help/releases/R2014b/curvefit/sum-of-sine.html
-
-%str = 'sin1'
-str = 'sin6'
-
-f=fit(TimeInYear,Y_det, str)
-figure
-subplot(2,1,1)
-plot(f,TimeInYear,Y_det)
-title(str)
-subplot(2,1,2)
-plot(f,TimeInYear,Y_det,'residuals')
-title('Residuals')
+%%
+f = fit(x, y, 'poly2','Robust','on');
+%%
+figure;
+plot(f, x, y);
+y = y - f(x);
+%%
+f=fit(x, y, 'sin1','Robust','on');
+%%
+figure;
+plot(f, x, y);
+y = y - f(x);
 
 %% 
 %See https://www.kevinsheppard.com/images/9/95/MFE_Toolbox_Documentation.pdf
 
-[trend, cyclic] = bkfilter(Y_det,6,32)
-figure
-subplot(2,1,1)
-plot(TimeInYear,trend,'r',TimeInYear,Y_det,'.b')
-title('Baxter-King Filter')
-subplot(2,1,2)
-plot(TimeInYear,cyclic,'.b')
-hline = refline([0 0])
-hline.Color = 'r'
-title('Residuals')
-
-%% 
-%See http://uk.mathworks.com/help/signal/ref/periodogram.html
-
-[pxx,w] = periodogram(Y_det);
-[pxx1,w1] = periodogram(cyclic);
-
-figure
-subplot(2,1,1)
-plot(w/2/pi,pxx,'b')
-hold on
-plot(w1/2/pi,pxx1,'r')
-xlabel('\omega / \pi')
-title('Periodogram')
-legend('Orginal','High-pass')
-
-
-subplot(2,1,2)
-plot(w/2/pi,pxx,'b')
-hold on
-plot(w1/2/pi,pxx1,'r')
-xlabel('\omega / \pi')
-legend('Orginal','High-pass')
-axis([0 inf -2000,2000])
+[trend, cyclic] = bkfilter(y,6,32);
+y = cyclic;
 
 %%
 figure
-subplot(2,1,1)
-ccfs=cwt(cyclic,1:128,'sym2','plot');
+subplot(3,1,1)
+coefs = cwt(y,1:128,'meyr','plot');
 title('Continuous Transform, absolute coefficients');
 set(gca,'yticklabel',[]);
 ylabel('Scale');
-subplot(2,1,2)
-plot(TimeInYear,Y,'b')
-title('Original')
+
+subplot(3,1,2)
+plot(x,index,'b')
+title('Index')
 
 %%
+coefs_by_day = num2cell(coefs,1);
+coefs_med = cellfun(@median, coefs_by_day);
+coefs_mean = cellfun(@mean, coefs_by_day);
+qfunc = @(q) @(x) quantile(x,q);
+ninethy = qfunc(.90);
+coefs_tail = cellfun(ninethy, coefs_by_day);
+coefs_max = cellfun(@max, coefs_by_day);
+subplot(3,1,3);
+plot(x,coefs_mean,'r');
+hold on
+plot(x,coefs_med,'g');
+hold on
+plot(x,coefs_tail,'b');
+hold on
+plot(x,coefs_max,'c');
 
