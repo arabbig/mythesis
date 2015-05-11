@@ -14,7 +14,7 @@ morethan = @(tresh) @(x) min(sum(x>tresh)/length(x),0.5);
 eta = morethan(1);
 coefs_eta = cellfun(eta, coefs_by_day);
 subplot(3,1,2);
-[ax,h1,h2] = plotyy(x,index,x,coefs_eta)
+[ax,h1,h2] = plotyy(x,index,x,coefs_eta);
 set(ax(2),'YLim',[0 0.5]);
 %%
 

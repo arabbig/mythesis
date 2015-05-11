@@ -10,9 +10,9 @@ fts_window  = myfts(periods{1});
 
 %%
 y = fts2mat(fts_window.series1);
-prev = y(1);
-y(1) = [];
-logret = [log(y(1)) - log(prev); diff(log(y))];
+%prev = y(1);
+%y(1) = [];
+%logret = [log(y(1)) - log(prev); diff(log(y))];
 
 LEN = length(y);
 x = (0:LEN-1)'/(LEN-1);
@@ -31,11 +31,5 @@ f = fit(x,y,'sin2','Upper',[Inf 1 Inf Inf 1 Inf],'Robust','on');
 figure
 plot(f, x, y);
 y = y - f(x);
-
-%% 
-% See https://www.kevinsheppard.com/images/9/95/MFE_Toolbox_Documentation.pdf
-
-% [trend, cyclic] = bkfilter(y,6,32);
-% y = cyclic;
 
 
