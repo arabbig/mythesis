@@ -7,7 +7,7 @@ hold on
 for i = 1:length(locs)
     d = locs(i) + 1;
     cumret = 1;
-    while index(d)/index(d-1) < 1.03 
+    while index(d)/index(d-1) < 1.03 && d < LEN
         if d - locs(i) > 10
             break
         end
@@ -15,7 +15,7 @@ for i = 1:length(locs)
         d = d + 1;
     end
     if pks(i) > 0.2
-        fprintf('2eta=%6.3f days=%2.d drawdown=%8.3f%% \n', pks(i), d - locs(i) - 1,(cumret-1)*100);
+        fprintf('eta=%6.3f days=%2.d drawdown=%8.3f%% \n', pks(i), d - locs(i) - 1,(cumret-1)*100);
         if cumret-1 > 0
             col = 'r';
         else
