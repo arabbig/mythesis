@@ -38,6 +38,7 @@ end
 fprintf(fid,'Num of events=%d\nNegative Drawdown=%d\nP(Drawdown=True)=%f \n', cnt, correct, correct/cnt);
 
 subplot(2,1,2)
-plot((0:LEN-1)',coefs_zeta,locs,pks,'b*');
-
+%plot((0:LEN-1)',coefs_zeta,locs,pks,'b*');
+[ax,h1,h2] = plotyy((1:LEN),index,(1:LEN),coefs_zeta);
+set(ax(2),'YLim',[0 0.5]);
 end

@@ -19,7 +19,7 @@ plot(f, x, y);
 y = y - f(x);
 
 %%
-f = fit(x,y,'sin2','Upper',[Inf 1 Inf Inf 1 Inf],'Robust','on');
+f = fit(x,y,'sin2','Upper',[Inf 1 Inf Inf 1 Inf],'Robust','on','Display','off');
 figure
 plot(f, x, y);
 y = y - f(x);
@@ -48,6 +48,8 @@ ninethyP_ccfs = cellfun(ninethyP, coefs_by_day);
 
 morethan = @(tresh) @(x) min(sum(x>tresh)/length(x),0.5);
 zeta = morethan(std(median_ccfs));
+%morethan = @(tresh) @(x) min(sum(x>tresh)/length(x),1);
+%zeta=morethan(mean(reshape(coefs,[prod(size(coefs)) 1])));
 coefs_zeta = cellfun(zeta, coefs_by_day);
 subplot(3,1,2);
 % Set axes http://uk.mathworks.com/matlabcentral/newsreader/view_thread/148694
