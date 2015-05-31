@@ -27,14 +27,14 @@ itranf  = function(v) {
 set.seed(12345)
 n     =  500
 alpha = c(-2.5,-1)
-beta  =  0.5
+beta  =  0.9
 tau2  =  0.0074
 tau   = sqrt(tau2)
 y     = rep(0,n)
-x     = rep(0,n)
+xtrue = rep(0,n)
 s     = rep(0,n)
-x[1]  = alpha/(1-beta)
-y[1]  = rlike(x[1])
+xtrue[1]  = alpha/(1-beta)
+y[1]  = rlike(xtrue[1])
 s[1]  = 0
 
 for (t in 2:n){
@@ -43,8 +43,8 @@ for (t in 2:n){
   } else {
     s[t] = rbinom(1,1,0.01)
   }
-  x[t] = rnorm(1,alpha[s[t]+1]+beta*x[t-1],tau)
-  y[t] = rlike(x[t])
+  xtrue[t] = rnorm(1,alpha[s[t]+1]+beta*xtrue[t-1],tau)
+  y[t] = rlike(xtrue[t])
 }
 alpha.true = alpha
 beta.true  = beta
@@ -64,8 +64,8 @@ g0      = 0
 G0      = 3
 # Liu and West filter
 # -------------------
-set.seed(8642)
-N      = 5000
+set.seed(3210)
+N      = 10000
 x     = rnorm(N,m0,sqrt(C0))
 s     = rbinom(N,1,0.5)
 #initialize param
@@ -112,7 +112,8 @@ for (t in 1:n){
 
   # sample of s(t+1), x(t+1)
   p           = apply(cbind(par_next[,'p00'],par_next[,'p10'],s[k]),1,function(v){ifelse(v[3],v[2],v[1])})
-  s_next      = rbinom(N,1,1-p) 
+  #p           = p[k]
+  s_next      = rbinom(N,1,1-p)
   alpha_next  = par_next[,'gam1'] + s_next*par_next[,'gam2']
   x_next      = rnorm(N,alpha_next+par_next[,'phi']*x[k],exp(par_next[,'tau2']/2))
   w           = likelihood(y[t],x_next)/likelihood(y[t],mx[k])
