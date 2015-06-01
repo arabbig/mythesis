@@ -5,7 +5,7 @@ index = fts2mat(myfts.series1);
 LEN = length(index);
 [pks, locs] = findpeaks(zetas, (1:LEN)');
 
-figure;
+%figure;
 subplot(2,1,1);
 plot(myfts.dates,index);
 datetick('x','dd/mm/yyyy');
@@ -40,7 +40,7 @@ end
 fprintf('Num of events=%d\nNegative Drawdown=%d\nP(Drawdown=True)=%f \n', cnt, correct, correct/cnt);
 
 subplot(2,1,2)
-%plot((0:LEN-1)',coefs_zeta,locs,pks,'b*');
+plot((0:LEN-1)',zetas,locs,pks,'b*');
 [ax,h1,h2] = plotyy(myfts.dates,index,myfts.dates,zetas);
 datetick(ax(1));
 datetick(ax(2));
