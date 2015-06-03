@@ -1,10 +1,9 @@
-
+dataset = 'spx';
+backtestPeriod = '01/01/2007::01/20/2011';
     
 %% Read whole period data
 T = readtable([dataset,'.csv']);
-dates = datenum(table2array(T(:,1)),'dd/mm/yyyy');
-data = T.Value;
-fts = fints(dates, data);
+fts =  createFTS(T);
 
 %% Calculating CWT, Zetas
 fts_window  = fts(backtestPeriod);
@@ -102,23 +101,9 @@ datetick(hxs2(2));
 title('Backtest, No padding')
 
 %%
-figure;
+%figure;
 %subplot(3,1,2)
-caldrawdown(testTS,zetas_lookahead,0.0);
+%caldrawdown(testTS,zetas_lookahead,0.0);
 %subplot(3,1,2);
 %caldrawdown(testTS,zetas2,0.0);
 
-%%
-RANGE2 = 20:length(testTS);
-logret = [0; diff(log(fts2mat(testTS.series1)))];
-monthvols = sqrt(conv(logret.^2,ones(20,1))*252/20);
-
-subplot(2,1,1);
-[hxs,~,~]=plotyy(testTS.dates(RANGE2),zetas_lookback1(RANGE2),testTS.dates(RANGE2),monthvols(RANGE2));
-datetick(hxs(1));
-datetick(hxs(2));
-
-subplot(2,1,2);
-[hxs1,~,~]=plotyy(testTS.dates(RANGE2),fts2mat(testTS.series1(RANGE2)),testTS.dates(RANGE2),zetas_lookback1(RANGE2));
-datetick(hxs1(1));
-datetick(hxs1(2));
