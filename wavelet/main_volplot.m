@@ -32,7 +32,8 @@ windowSize = 252;
 
 zetas_delay0 = ones(N-windowSize, 1);
 zetas_delay5 = ones(N-windowSize, 1);
-
+%zetas_max5 = ones(N-windowSize, 1);
+%zetas_max10 = ones(N-windowSize, 1);
 RANGE = (windowSize + 1) : N ;
 for date = RANGE 
     coefs = calcwt(fts_window((date - windowSize):(date)));
@@ -48,17 +49,20 @@ nxtmnthVols = sqrt(conv(logret.^2,ones(20,1))*252/20)*100;
 nxtmnthVols(end-18:end) = [];
 nxtmnthVols(1:19) = [];
 L = length(nxtmnthVols);
-realVolTS = fints(testTS.dates(1:L)+20,nxtmnthVols);
-[d,ia,ib]=intersect(realVolTS.dates, ivol_window.dates);
+realVolTS = fints(testTS.dates(1:L) + 20,nxtmnthVols);
+% check
+% sqrt(mean(diff(log(fts2mat(testTS.series1(t:t+20)))).^2)*252)*100
+% realVolTS(t)
+[d,ia,ib]=intersect(realVolTS.dates, ivol_window.dates + 20);
 realVolTS = realVolTS(ia);
-zetas_delay0 = zetas_delay0(ia);
-zetas_delay5 = zetas_delay5(ia);
+zetas_delay0= zetas_delay0(ia); % realVolTS vs testTS : same indexs, with 20+ date
+zetas_delay5= zetas_delay5(ia);
 ivolTS = ivol_window(ib);
 
 %missing data in BPVIXIndex after 29 May 2009
 
 %%
-loss = fts2mat(realVolTS) - fts2mat(ivolTS.series1);
+loss = fts2mat(realVolTS.series1) - fts2mat(ivolTS.series1);
 figure;
 subplot(3,1,1);
 [hxs,h1,h2]=plotyy(realVolTS.dates,loss,realVolTS.dates,zetas_delay0);
