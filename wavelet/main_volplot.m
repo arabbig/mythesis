@@ -24,56 +24,64 @@ fts =  createFTS(T);
 ivol_fts = createFTS(imvTab);
 
 fts_window  = fts(dataPeriod);
-ivol_window  = ivol_fts(dataPeriod);
 
 %% Calculating CWT, Zetas
 N = min(length(fts_window));
 windowSize = 252;
 
-zetas_delay0 = ones(N-windowSize, 1);
 zetas_delay5 = ones(N-windowSize, 1);
+zetas_mean10 = ones(N-windowSize, 1);
 %zetas_max5 = ones(N-windowSize, 1);
 %zetas_max10 = ones(N-windowSize, 1);
 RANGE = (windowSize + 1) : N ;
 for date = RANGE 
-    coefs = calcwt(fts_window((date - windowSize):(date)));
-    cf_today = coefs(:,end);
-    zetas_delay0(date-windowSize) = calzeta(cf_today, coefs,'global_mean');   
-    cf_past5day = coefs(:,end-5);
-    zetas_delay5(date-windowSize) = calzeta(cf_past5day, coefs,'global_mean');    
+    coefs = calcwt(fts_window((date - windowSize):(date-1)));
+    tresh = calthreshold(coefs,'global_mean');
+    zs = ones(10,1);
+    for i = 1:10
+        cf = coefs(:,end-i+1);
+        zs(i) = calzeta2(cf, tresh); 
+    end
+    zetas_delay5(date-windowSize) = zs(4);
+    zetas_mean10(date-windowSize) = mean(zs);    
 end
 %%
 testTS = fts_window(RANGE);
 logret = diff(log(fts2mat(testTS.series1)));
-nxtmnthVols = sqrt(conv(logret.^2,ones(20,1))*252/20)*100;
-nxtmnthVols(end-18:end) = [];
-nxtmnthVols(1:19) = [];
-L = length(nxtmnthVols);
-realVolTS = fints(testTS.dates(1:L) + 20,nxtmnthVols);
+realVolMAT = sqrt(conv(logret.^2,ones(20,1))*252/20)*100;
+% align it with their corresponding testTS.dates
 % check
-% sqrt(mean(diff(log(fts2mat(testTS.series1(t:t+20)))).^2)*252)*100
-% realVolTS(t)
-[d,ia,ib]=intersect(realVolTS.dates, ivol_window.dates + 20);
-realVolTS = realVolTS(ia);
-zetas_delay0= zetas_delay0(ia); % realVolTS vs testTS : same indexs, with 20+ date
-zetas_delay5= zetas_delay5(ia);
-ivolTS = ivol_window(ib);
+% realized(t) = sqrt(mean(diff(log(fts2mat(testTS.series1(t-20:t)))).^2)*252)*100
+% == nxtmnthVols(t) except precision loss
+realVolMAT(end-18:end) = [];
+realVolMAT(1:19) = NaN;
+realVolMAT = [NaN; realVolMAT]; 
+realVolTS = fints(testTS.dates,realVolMAT);
+ivol_window  = ivol_fts(dataPeriod);
+
+testTS = chfield(testTS, 'series1', 'index');
+realVolTS = chfield(realVolTS, 'series1', 'realVol');
+ivol_window = chfield(ivol_window, 'series1', 'impVol');
+allTS = merge(testTS,realVolTS);
+allTS = merge(allTS, ivol_window); % merge to make ivol aligned with index, in case there are missing values
+impVolTS_lag20 = lagts(extfield(allTS,'impVol'),20);
+spreadTS = chfield(extfield(allTS,'realVol'),'realVol','spread') - chfield(lagts(extfield(allTS,'impVol'),20),'impVol','spread');
+spreadTS = spreadTS(datestr(testTS.dates));
 
 %missing data in BPVIXIndex after 29 May 2009
 
 %%
-loss = fts2mat(realVolTS.series1) - fts2mat(ivolTS.series1);
 figure;
 subplot(3,1,1);
-[hxs,h1,h2]=plotyy(realVolTS.dates,loss,realVolTS.dates,zetas_delay0);
+[hxs,h1,h2]=plotyy(testTS.dates, fts2mat(spreadTS.spread), testTS.dates, zetas_mean10);
 datetick(hxs(1));
 datetick(hxs(2));
 set(hxs(2),'YLim',[0,3])
 legend([h2;h1],'zeta','spread')
-title('No delay')
+title('Mean 10 days')
 
 subplot(3,1,2);
-[hxs,h1,h2]=plotyy(realVolTS.dates,sign(loss),realVolTS.dates,zetas_delay0);
+[hxs,h1,h2]=plotyy(testTS.dates, sign(fts2mat(spreadTS.spread)), testTS.dates, zetas_mean10);
 datetick(hxs(1));
 datetick(hxs(2));
 set(hxs(1),'YLim',[-2,2])
@@ -81,19 +89,22 @@ set(hxs(2),'YLim',[0,3])
 legend([h2;h1],'zeta','spread')
 
 subplot(3,1,3);
-crosscorr(zetas_delay0,loss);
+pair = [zetas_mean10, fts2mat(spreadTS.spread)];
+pair(any(isnan(pair),2),:) = [];
+crosscorr(pair(:,1),pair(:,2),100);
+
 %%
 figure;
 subplot(3,1,1);
-[hxs,h1,h2]=plotyy(realVolTS.dates,loss,realVolTS.dates,zetas_delay5);
+[hxs,h1,h2]=plotyy(testTS.dates, fts2mat(spreadTS.spread), testTS.dates, zetas_delay5);
 datetick(hxs(1));
 datetick(hxs(2));
 set(hxs(2),'YLim',[0,3])
 legend([h2;h1],'zeta','spread')
-title('5 days delay')
+title('Delay 5 days')
 
 subplot(3,1,2);
-[hxs,h1,h2]=plotyy(realVolTS.dates,sign(loss),realVolTS.dates,zetas_delay5);
+[hxs,h1,h2]=plotyy(testTS.dates, sign(fts2mat(spreadTS.spread)), testTS.dates, zetas_delay5);
 datetick(hxs(1));
 datetick(hxs(2));
 set(hxs(1),'YLim',[-2,2])
@@ -101,4 +112,6 @@ set(hxs(2),'YLim',[0,3])
 legend([h2;h1],'zeta','spread')
 
 subplot(3,1,3);
-crosscorr(zetas_delay5,loss);
+pair = [zetas_delay5, fts2mat(spreadTS.spread)];
+pair(any(isnan(pair),2),:) = [];
+crosscorr(pair(:,1),pair(:,2),100);
