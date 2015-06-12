@@ -1,15 +1,15 @@
 defaultDates = '01/01/2007::01/20/2015';
 eemusDates = '03/16/2011::01/20/2015';
 fxDates = '01/07/2008::01/20/2015';
-indexNames = {'spx','eemus','ukx','nky','dax','jpyusd','gbpusd','eurusd'};
-imvNames = {'vix.mat','vxeem.mat','vftse.mat','vnky.mat','v1x.mat','jyvix.mat','bpvix.mat','euvix.mat'};
+indexNames = {'spx','ukx','nky','dax','eemus','jpyusd','gbpusd','eurusd'};
+imvNames = {'vix.mat','vftse.mat','vnky.mat','v1x.mat','vxeem.mat','jyvix.mat','bpvix.mat','euvix.mat'};
 
-dataset = char(indexNames(i));
-imvfile = char(imvNames(i));
+dataset = char(indexNames(dataindex));
+imvfile = char(imvNames(dataindex));
 dataPeriod = defaultDates;
-if i == 2
+if dataindex == 5
     dataPeriod = eemusDates;
-elseif i >= 6
+elseif dataindex >= 6
     dataPeriod = fxDates;
 end
 %%
