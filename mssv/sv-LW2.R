@@ -25,15 +25,15 @@ itranf  = function(v) {
 # Simulating the data
 # -------------------
 set.seed(12345)
-n     =  500
+n     =  1000
 alpha = c(-2.5,-1)
 beta  =  0.5
-tau2  =  0.0074
+tau2  =  1
 tau   = sqrt(tau2)
 y     = rep(0,n)
 xtrue = rep(0,n)
 strue     = rep(0,n)
-xtrue[1]  = alpha[0]/(1-beta[0])
+xtrue[1]  = alpha[1]/(1-beta[1])
 y[1]  = rlike(xtrue[1])
 strue[1]  = 0
 
@@ -53,19 +53,19 @@ tau2.true  = tau2
 # Data and prior hyperparameters 
 # ------------------------------
 m0      = 0.0
-a0      = -4
+a0      = 0
 b0      = 0.0
 A0      = 3
 B0      = 3
 C0      = 1
 nu      = 4.01
 tau0   = 0.1
-g0      = 3
+g0      = 0
 G0      = 3
 # Liu and West filter
 # -------------------
 set.seed(3210)
-N      = 5000
+N      = 50000
 x     = rnorm(N,m0,sqrt(C0))
 s     = rbinom(N,1,0.5)
 #initialize param
@@ -73,12 +73,13 @@ tau2  = 1/rgamma(N,nu/2,nu/2*tau0^2)
 phi   = rtnorm(N,b0,sqrt(B0),lower = -1,upper = 1)
 p00   = rdirichlet(N,c(0.5,0.5))[,1]
 p10   = rdirichlet(N,c(0.5,0.5))[,1]
+# need change back
 gam1  = rtnorm(N,a0,sqrt(A0), upper = -1)
 gam2  = rtnorm(N,g0,sqrt(G0), lower = 2)
 para   = cbind(phi,p00,p10,tau2,gam1,gam2)
 
 
-delta  = 0.75
+delta  = 0.85
 h2     = 1-((3*delta-1)/(2*delta))^2
 a      = sqrt(1-h2)
 parss  = array(0,c(N,6,n))
@@ -134,11 +135,13 @@ for (t in 1:n){
 }
 
 # Posterior summary
+
 # -----------------
 mlogvol   = apply(xss,1,mean)
 mvol   = apply(exp(xss/2),1,mean)
 mstate = apply(ss,1,mean)
 # Graphical analysis
+pdf(file="output/noinformative_param_5000.pdf",paper='a4')
 par(mfrow=c(3,1));
 ts.plot(log(y^2), col='blue', main='log-variance');
 lines(xtrue,col='black')
@@ -147,3 +150,4 @@ ts.plot(y,col='black',main='return')
 lines(mvol,col='red')
 ts.plot(mstate,col='red', main='state',ylim=c(-0.1,1.1));
 lines(strue,col='black');
+dev.off()
