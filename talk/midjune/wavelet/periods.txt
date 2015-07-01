@@ -1,0 +1,21 @@
+asset(1).name = 'spx';
+asset(1).periods = {'01/01/2007::12/31/2008','01/01/2010::12/31/2011'};
+
+asset(2).name = 'dax';
+asset(2).periods = {'01/01/2007::12/31/2008','01/01/2010::12/31/2011'};
+
+asset(3).name = 'nky';
+asset(3).periods = {'01/01/2007::12/31/2008','01/01/2010::12/31/2011'};
+%http://en.wikipedia.org/wiki/Japanese_asset_price_bubble
+
+asset(4).name = 'ukx';
+asset(4).periods = {'01/01/2007::12/31/2008','01/01/2010::12/31/2011'};
+
+asset(5).name = 'eurusd';
+asset(5).periods = {'01/01/2007::12/31/2008','01/01/2010::12/31/2011'};
+
+asset(6).name = 'gbpusd';
+asset(6).periods = {'01/01/2008::12/31/2009','01/01/2009::12/31/2010'};
+
+asset(7).name = 'jpyusd';
+asset(7).periods = {'01/01/2012::12/31/2013','01/01/2013::12/31/2014'};

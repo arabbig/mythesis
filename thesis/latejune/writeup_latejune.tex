@@ -1,0 +1,136 @@
+\documentclass[a4paper]{article}
+\usepackage[english]{babel}
+\usepackage[english]{inputenc}
+\usepackage{t1enc}   %elválasztás!!!!
+
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{listings}
+\usepackage{cancel}
+
+\usetikzlibrary{arrows}
+\graphicspath{ {images/} }
+
+\author{Chan Pruksapha}
+
+\let\oldref\ref
+\renewcommand{\ref}[1]{(\oldref{#1})}
+
+\begin{document}
+
+\section*{Introduction: Markov Switching Auto-regressive}
+
+In this section, we describe how markov-switching models arise in the context of modelling abrupt change in financial time series. In large part our explanation below is motivated by an exposition by Hamilton \cite{ham08}, although some modifications and extra content are added to suit our specific context.
+
+Let begin by considering how we might describe the consequences of a dramatic change in the behavior of a single variable $y_t$. Suppose that the typical historical behavior could be described with a zero-mean first-order autoregression,
+
+\begin{equation}\label{eq:phione}
+y_t = \phi_1 y_{t-1} + \epsilon_t,
+\end{equation}
+$\epsilon_t \sim N(0,\sigma^2)$, which adequately describe the observed data up for $t = 1,2,\dots,t_0$.
+Suppose that at date $t_0$ there was a significant change in the mean reverting rate of the series, so that we would instead wish to describe the data according to
+\begin{equation}\label{eq:phitwo}
+y_t = \phi_2 y_{t-1} + \epsilon_t 
+\end{equation}
+for $t = t_0+1, t_0+2, \dots$. On one hand, we could say that the series are governed by two different models \ref{eq:phione}, \ref{eq:phitwo} and there is a determistic shift in parameter shift after day $t_0$, but this is not satisfactory as a probability law that genereate data. The idea of regime switching model is that we, alternatively, encompass both models by a single, larger one
+\begin{equation}
+y_t = \phi_{s_t} y_{t-1} + \epsilon_t,
+\end{equation}
+in which we introducing a new variable $s_t$, which indicates whether or not we are in the first regime, or in the second regime, according to whether or not $t$ is before or after $t_0$. Specifically,
+\begin{equation*}
+s_t = 
+\begin{cases}
+1, & \text{ if } t\leq t_0,\\
+2, & \text{ otherwise.}
+\end{cases}
+\end{equation*}
+
+
+\begin{figure}[!h]
+\centering
+% The output from tikz()
+% is imported here.
+\input{images/swarEx.tex}
+\caption{Simple Example}
+\end{figure}
+
+
+\begin{figure}[!h]
+\centering
+% The output from tikz()
+% is imported here.
+\input{images/swarEx2.tex}
+\caption{Simple Example}
+\end{figure}
+
+A complete description of the probability law governing the observed data would then require a probabilistic model of what caused the change from $s_t = 1 \text{ to } s_t = 2$. The simplest such specification is that $s_t$ is the realization of a two-state Markov chain with
+
+\begin{equation} \label{eq:tranprob}
+\mathbb{P}(s_t = i | s_{t-1} = j, s_{t-2}, \dots, y_{t-1}, y_{t-2}, \dots) = \mathbb{P}(s_t = i | s_{t-1} = j) := p_{ij}.
+\end{equation}
+
+The specification in \ref{eq:tranprob} assumes that the probability of a change in regime depends on the past only through the value of the most recent regime. Although there are some excellent discussions (e.g., \cite{dieb94}, \cite{fil94}) about time-varying transitional probability, of which the dependency of past observation $y_{t-1}, y_{t-2} , \dots$ are maintained as in LHS., it is found in most applications that regime switching models work well under markov assumption.
+
+\section*{Formal Definitions}
+
+\begin{equation}
+y_t = c_{s_t} + \sum_{i=1}^L \phi_i^{s_t} y + \epsilon_t
+\end{equation}
+
+\begin{equation}
+A=
+\begin{bmatrix}
+    p_{11}       & p_{12} & p_{13} & \dots & p_{1S} \\
+    p_{21}       & p_{22} & x_{23} & \dots & p_{2S} \\
+    \hdotsfor{5} \\
+    p_{S1}       & p_{S2} & p_{S3} & \dots & p_{SS}
+\end{bmatrix}
+\end{equation}
+
+\section*{Learning and Inferences}
+
+\subsection*{EM algorithm}
+ To do.
+\subsection*{Forward Filtering}
+
+Next, we discuss how do we infer which regime our time series $y_t$ is falling in on a particular day $t$. Equations \ref{eq:fwdfilt1}, \ref{eq:fwdfilt2} and \ref{eq:fwdfilt3} below are the derivation of probability that the regime variable $s_t$ equals to regime $i$, conditioning on all the past observations $y_t, y_{t-1}, \dots$ that are available up to day $t$.
+
+\begin{equation}\label{eq:fwdfilt1}
+\mathbb{P}(s_t = i | y_t, y_{t-1}, \dots) = \frac{ \mathbb{P}(y_t | s_t = i, y_{t-1}, y_{t-2}, \dots) \mathbb{P}(s_t = i | y_{t-1}, \dots) } { \mathbb{P}(y_t | y_{t-1}, \dots)}
+\end{equation}
+\begin{equation}\label{eq:fwdfilt2}
+\mathbb{P}(s_t = i | y_{t-1}, \dots) = \sum_{j=1}^{S} \mathbb{P}(s_t = i | s_{t-1} = j, y_{t-1}, \dots) \mathbb{P}(s_{t-1} = j | y_{t-1}, \dots) 
+\end{equation}
+
+By applying markov assumption\footnote{$p_{ij}=\mathbb{P}(s_t = i | s_{t-1} = j) = \mathbb{P}(s_t = i | s_{t-1} = j, \cancel{y_{t-1}}, \dots).$} equations \ref{eq:fwdfilt1} and \ref{eq:fwdfilt2} become
+
+\begin{equation} \label{eq:fwdfilt3}
+\mathbb{P}(s_t = i | y_t, \dots) \text{\;$\propto$\footnotemark\;} \mathbb{P}(y_t | s_t = i, y_{t-1}, \dots) \sum_{j=1}^{S} p_{ij} \mathbb{P}(s_{t-1} = j | y_{t-1}, \dots). 
+\end{equation}
+\footnotetext{The normalizing constant, ${\mathbb{P}(y_t | y_{t-1}, \dots) = \sum_{i=1}^{2} \mathbb{P}(y_t | s_t = i, y_{t-1}, y_{t-2}, \dots) \mathbb{P}(s_t = i | y_{t-1},} \dots)$, is actually the summation of the RHS. of \ref{eq:fwdfilt3} over $i\in\{1,\dots,S\}$.}
+
+\section*{Training}
+
+\begin{figure}[!h]
+\centering
+\input{images/firstTrained.eps}
+\caption{Jan 2002 - Decempber 2009}
+\end{figure}
+
+
+
+
+\begin{thebibliography}{1}
+\bibitem{ham08} Hamilton, J.D. (2008). Regime-switching models. In: S. Durlauf and L. Blume (eds.), New Palgrave dictionary of economics, 2nd edition. Palgrave McMillan Ltd.
+\bibitem{dieb94} Diebold, F.X., J.H. Lee, and G.C. Weinbach. Regime Switching with Time-Varying Transition Probabilities. In: C. Hargreaves, ed., Nonstationary Time Series Analysis and Cointegration. Oxford, UK: Oxford University Press, 1994, pp. 283-302.
+\bibitem{fil94} Filardo, A.J., 1994, Business cycle phases and their transitional dynamics. Journal of Business and Economic Statistics 12, 299 308. 
+\end{thebibliography}
+
+\end{document}
+
+
+

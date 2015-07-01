@@ -1,0 +1,130 @@
+\documentclass[a4paper, twocolumn]{article}
+\usepackage[magyar]{babel}
+\usepackage[latin2]{inputenc}
+\usepackage{t1enc}   %elválasztás!!!!
+
+\usepackage[dvips]{graphicx}
+\usepackage[dvips]{color}
+
+% \textwidth 105mm
+% \oddsidemargin -5mm
+% \evensidemargin -5mm
+% \textheight 155mm
+% \topmargin -5mm
+% \paperheight 297mm
+% \paperwidth 210mm
+
+
+\begin{document}
+% author names, affiliation and email
+
+
+
+
+\title{Wavelet}
+\author{LaTeX Gyakorl\'o\\
+Sz\'echenyi Istv\'an University, 9026 Gy\H{o}r, Egyetem t\'er 1.\\
+xyz@abx.hu}
+\maketitle
+% make the title area
+
+
+\begin{abstract}
+aa
+\end{abstract}
+
+
+
+\section{Introduction\label{sec1}}
+Wavelet trans. is a widely used mathematical method,  \cite{daub92}. As a first step a well chosen function $\psi$, i.e., 
+\begin{equation}\label{elsoegyenlet}
+[W_\psi f](a,b)=\frac{1}{\sqrt{|a|}} \int_{-\infty}^\infty \overline{\psi \left( \frac{x-b}{a} \right)}f(x)dx.
+\end{equation}
+\[
+a=a\qquad a\quad a\ a\;a\,aa\!a\sin \cdot \ldots \cdots a\omega^3 t^2x_\alpha r
+\]
+\begin{eqnarray}
+% \nonumber to remove numbering (before each equation)
+  \sum_{k=1}^N \pi_k&=& 22 \label{eq1}\\
+  \oint_A B dA &=& \int \Phi dl \nonumber\\
+  \bigcup_{p=0}^N A_p&=& \sqrt{\emptyset} \label{eeeee}
+\end{eqnarray}
+
+\noindent \ref{elsoegyenlet} \ref{sec1} $\sum_{k=1}^N \pi_k= 22$ Here $b$ corresponds to the shift i.e., the position in time or space, and $a$ to the compression, i.e. the frequency. At the normal wavelet transformation th where $a = 2^{-j}$ and $b = k2^{-j}$. Values $k$ and $j$ 
+\[
+\begin{array}{lccc}
+  a & b & c & d \\
+  d & a & d & d \\
+  s & k & w & e
+\end{array}
+\]
+\[
+\left(
+  \begin{array}{cccc}
+    a & c & g & r \\
+    a & c & g & r \\
+    a & c & g & r \\
+    a & c & g & r \\
+  \end{array}
+\right)
+\]
+\begin{table}
+\caption{asdfgh}
+\label{asasas}
+\begin{tabular}{|l|r|c|c|}
+  \hline
+  % after \\: \hline or \cline{col1-col2} \cline{col3-col4} ...
+  a & y & c & 1 \\
+  \hline
+  a & a & 6 & 3 \\
+  \cline{2-3}
+  a & x & 7 & 2 \\
+  \hline
+\end{tabular}
+\end{table}
+
+\begin{figure}[h!]
+\centerline{\includegraphics[width=8cm]{aaaa2.eps}}
+\caption{Wavelet-transzformáció képre}
+\label{fig1}
+\end{figure}
+
+
+
+\section{EDoF}
+
+
+
+
+Ennek gyakorlati megval\'os\'{\i}t\'as\'ara Forster, Van de Ville, Berent, Sage \'es Unser \cite{a4} dolgozta ki az
+\begin{eqnarray}
+S^l_{n,m}(\Phi_j,\Phi_{j+1}) =& &  \nonumber \\
+=\frac{Cov_{n,m}(W^{l-1}_A(\Phi_j),W^{l-1}_A(\Phi_{j+1})} {\sqrt{Var_{n,m}(W^{l-1}_A(\Phi_j))Var_{n,m}(W^{l-1}_A(\Phi_{j+1}))}}&&
+\end{eqnarray}
+
+
+%A kifejezésben $W^l_A(a)$ az $a$ kép $l$-edik szintű waveletranszformációja eredményeként keletkező alsó
+
+\begin{equation}
+e(x) = \frac{1}{N}||x||_1=\frac{1}{N}\sum_{i=1}^{N}|x_i|
+\end{equation}
+
+%\vfill
+\vspace{-5 mm}
+
+\begin{thebibliography}{1}
+\bibitem{chui92} Chui, C. K.: An introduction to wavelets; Academic Press, San Diego, 1992. 266 p.
+\bibitem{daub92} Daubechies, I.: Ten lectures on wavelets; Society for Industrial and Applied Mathematics, Pennsylvania, 1992. 365 p.
+\bibitem{a3} Mallat, S.: A theory for multiresolution signal decomposition: the wavelet  representation; In: IEEE Transactions on Pattern Analysis and Machine Intelligence, Vol. 11, Issue 7, 1989. pp. 674-693.
+\bibitem{a4} Gross, S.: Multi-observer survey on quality enhancement techniques
+for still image acquisition in colonoscopy; 14th International Student Conference on
+Electrical Engineering, Prague, 2010. BI2, 5 p.
+\bibitem{a5} Forster, B.; Van de Ville, D.; Berent, J.; Sage, D.; Unser, M.: Complex wavelets for extended depth-of-field: A new method for the fusion of multichannel microscopy images; In: Microscopy Research and Technique, Vol. 65, 2004. pp. 33-42.
+\bibitem{a6} Bradley, A. P.; Bamford, P. C.: A one-pass extended depth of field algorithm based on the over-complete discrete wavelet transform;  Image and Vision Computing '04 New Zealand, Akaroa, 2004. pp. 279-284.
+\bibitem{a7} Kaftan, J.; Bell, A. A.; Seiler, C.; Aach, T.: Wavelet based denoising by correlation analysis for high dynamic range imaging; IEEE International Conference on Image Processing, Cairo, 2009. pp. 3857-3860.
+\bibitem{a8} Chang, T.; Kuo, C.-C. J.: Texture analysis and classification with tree-structured wavelet transform; In: IEEE Transactions on Image Processing, Vol. 2, No. 4, 1993. pp. 429-441.
+
+\end{thebibliography}
+
+% that's all folks
+\end{document}

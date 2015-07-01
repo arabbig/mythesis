@@ -1,0 +1,1192 @@
+% WaveLab.tex
+
+% ********** INITIALIZATION **********
+
+\documentstyle[12pt,villard,twoside]{article}
+\begin{document}
+\setcounter{page}{1} %this is the number of the first page of your paper.
+
+\title{``Really Reproducible Research'' and WaveLab}
+
+\author{Jonathan B.\ Buckheit and David L.\ Donoho}
+
+\institute{Stanford University, Stanford CA 94305, USA}
+
+\maketitle
+
+% ********** MACROS **********
+
+%== File Types ==
+\newcommand{\dotm}{{\tt .m}\ } 
+\newcommand{\dotmex}{{\tt .mex}\ }
+\newcommand{\dotdat}{{\tt .dat}\ }
+\newcommand{\dotraw}{{\tt .raw}\ } 
+\newcommand{\dotasc}{{\tt .asc}\ }
+\newcommand{\dotdoc}{{\tt .doc}\ }
+\newcommand{\dotps} {{\tt .ps}\ }
+\newcommand{\dottex}{{\tt .tex}\ }
+\newcommand{\dotzip}{{\tt .zip}\ }
+\newcommand{\dottar}{{\tt .tar.Z}\ }
+\newcommand{\dotsea}{{\tt .sea.hqx}\ }
+\newcommand{\BS}{$\backslash$}
+
+%== File Names ==
+\newcommand{\Contents}{ {\tt Contents.m}\ }
+\newcommand{\WavePath}{ {\tt WavePath.m}\ }
+\newcommand{\Startup}{  {\tt startup.m}\ }
+\newcommand{\WLDir}{    {\tt WaveLab/}\ }
+\newcommand{\WLDirNS}{  {\tt WaveLab/}}
+\newcommand{\Thanks}{   {\tt THANKS.m}\ }
+\newcommand{\Copying}{  {\tt COPYING.m}\ }
+\newcommand{\Warranty}{ {\tt WARRANTY.m}\ }
+\newcommand{\Payment}{  {\tt PAYMENT.m}\ }
+
+%== Directory Names ==
+\newcommand{\DocDir}{   {\tt WaveLab/Documentation}\ }
+\newcommand{\DataDir}{  {\tt WaveLab/Datasets}\ }
+\newcommand{\ScriptDir}{{\tt WaveLab/Papers}\ }
+\newcommand{\WLVersion}{0.600}
+\newcommand{\WLVersionNS}{0600}
+
+%== Machine Names ==
+\newcommand{\Playfair}   {{\tt playfair.stanford.edu}\ }
+\newcommand{\PlayfairNS} {{\tt playfair.stanford.edu}}
+\newcommand{\eWaveLab}   {{\tt wavelab@playfair.stanford.edu}\ }
+\newcommand{\eWaveLabNS} {{\tt wavelab@playfair.stanford.edu}}
+
+%== Program Names ==
+\newcommand{\WaveLab}{{\sc WaveLab}\ }   % Refers to whole system WaveLab
+\newcommand{\WaveLabNS}{{\sc WaveLab}}   % Same as above but no space
+\newcommand{\TTWL}{{\tt /WaveLab}}									% Refers to directory WaveLab
+\newcommand{\Matlab}{{\sc Matlab}\ }     % Refers to whole system Matlab
+\newcommand{\MatlabNS}{{\sc Matlab}}     % Same as above but no space
+
+%== File Sizes
+\newcommand{\MinSize}{2~Mb\ }            % Size of decompressed archive
+\newcommand{\MaxSize}{4.5~Mb\ }
+
+%== LaTeX Shortcuts ==
+\newcommand{\bitem}{\begin{itemize}}
+\newcommand{\eitem}{\end{itemize}}
+\newcommand{\benum}{\begin{enumerate}}
+\newcommand{\eenum}{\end{enumerate}}
+\newcommand{\bquote}{\begin{quotation}}
+\newcommand{\equote}{\end{quotation}}
+
+% ********** ABSTRACT **********
+\begin{abstract}
+\WaveLab is a library of \Matlab routines for wavelet analysis, wavelet-packet
+analysis, cosine-packet analysis and matching pursuit. The library is available
+free of charge over the Internet.   Versions are provided for Macintosh, UNIX
+and Windows machines.
+
+\WaveLab makes available, in one package, all the code to reproduce all the
+figures in our published wavelet articles. The interested reader can inspect the
+source code to see exactly what algorithms were used, and how parameters were
+set in producing our figures, and can then modify the source to produce
+variations on our results. \WaveLab has been developed, in part, because of
+exhortations by Jon Claerbout of Stanford that computational scientists should
+engage in ``really reproducible'' research. 
+\end{abstract}
+
+% ********** SECTION 1: WaveLab -- Reproducible Research via Internet **********
+\section{WaveLab -- Reproducible Research via the Internet}
+
+A remarkable aspect of ``the wavelet community'' is the wide span of intellectual activities
+that it makes contact with.  At one extreme, wavelets are interesting to mathematicians who
+are interested in functional spaces, their properties and decompositions -- while at the
+other extreme wavelets are interesting in certain commercial software development
+efforts, where engineers are crafting of computer programs apply wavelets to
+specific problems in high-technology.
+
+Work at Stanford on statistical applications of wavelets has, over the last five years,
+reflected a great deal of this range of wavelet activity. David Donoho and Iain Johnstone
+have written a number of theoretical papers; but also, a team involving 
+students Shaobing Chen and Jon Buckheit, Eric Kolaczyk, and Sudeshna Adak, as
+well as Donoho, Johnstone, and Jeff Scargle of NASA Ames have 
+developed a collection of software tools known as
+\WaveLab.
+
+The \WaveLab package contains a wide range of tools for Wavelet and
+related time-frequency transforms.  As this was written, version .700 was
+almost complete, consisting of over 700 files -- programs, data, documentation,
+and scripts. At the moment, the package requires over two Megabytes of storage
+in compressed form.  The package is available free of
+charge over the Internet, using standard interfaces like FTP and WWW.
+
+The stated goal of the package, and the stated reason for its distribution:
+to allow others to reproduce the figures and tables in the articles published
+by our group.
+
+It of course not unusual that researchers who were initially drawn into wavelets because of
+interests at the mathematical end of the scale would end up also doing some software
+development, for example to generate figures for their articles.  It is perhaps less to be
+expected that they would be involved in actual packaging and distribution of software to
+others.  Release of software underlying scientific publication is the exception rather than
+the rule. Each year, many figures are published in the scientific literature which were
+generated by computer; relatively few of those figures lead to the distribution of the
+software which generated them.  Moreover, even those who make software available
+would rarely take the trouble to create a relatively comprehensive computing environment
+around it -- merely to ease the task of others wishing to reproduce results.  But that
+is exactly what we have done -- constructed a whole computing environment aimed
+at allowing others to easily reproduce the figures in our articles. 
+
+Our main goal in this paper is to call attention to a principle we have tried to follow: 
+\begin{quote}
+{\it when we publish articles containing figures which were generated by computer, we
+also publish the complete software environment which generates the figures}.
+\end{quote}
+We will describe the reasons why we
+try to follow this principle, the software environment \WaveLab
+we have built in trying to follow it, some of the
+capabilities of this environemnt, some of the
+lessons we have learned by trying to follow it,
+and also the implications it has for the conduct of science generally.   
+
+\section{The Scandal}
+
+To avoid sounding like we are pointing the
+finger at anyone else, we will mention a few problems
+we have encountered in our own research.
+
+\begin{itemize}
+\item {\it Burning the Midnight Oil.} Once, writing an article with $\approx 30$ figures,
+we had to tweek various algorithms and display options
+to display clearly the effects we were looking for.
+As a result, after an 18-hour day we had 
+accumulated a stack of a few hundred sheets of paper, all of which
+purported to be versions of the figures for the article.  We gave
+up well after midnight.  
+
+Returning to work 8 hours later, we had a question:  
+which were the ``final'' versions, the ones which should go in the article?
+The easy answer would have been ``the nicest looking ones'', but that wouldn't always
+be right.  In fact, the correct answer would have been ``the ones
+generated using the settings and algorithms exactly described in the
+paper''.  Those were not always the best-looking ones.
+
+In any event, we had a major problem sorting through the hundreds of sheets
+of paper to find the ones that really belonged in the article.  It is possible,
+though not likely, that we fooled ourselves, and put the wrong version of some
+figures in the final copy.  
+
+\item {\it The Stolen Briefcase.} 
+Once, several years ago, at a conference, one of us had a briefcase stolen.  The
+briefcase contained originals of figures which had been developed while an employee of a
+large commercial seismic exploration outfit. 
+The data and data processing equipment which had
+generated the figures were proprietary. 
+There was no reasonable prospect of finding the time
+or opportunity to return to the seismic firm to reconstruct the figures from scratch.  A
+manuscript had already been written.  The figures were so convincing and so pivotal (the
+subject of the article was a specialized kind of image processing) that without them, the
+manuscript made no sense.  The manuscript had to be abandoned.   
+
+\item {\it Who's on First?} A Graduate Student comes into a Professor's office and says,
+``that idea you told me to try -- it doesn't work!''  The Professor suggests to him some
+variation on the idea, and the Student returns a day later with the same response. 
+Unfortunately, the Student's descriptions of the problems he is facing don't give the
+Professor much insight into what's going on. And this keeps recurring day after day. After
+a long period of discussion, it becomes apparent that the issue really is as follows: the
+student actually needs to provide the Professor with detailed information so they could
+explore four branches on a decision tree:
+
+\begin{itemize}
+
+\item Is the idea itself incorrect?
+\item Or is the idea okay, while the student's implementation of the idea is incorrect?
+
+\item Or is the implementation okay,
+while the student's invocation of the algorithm used incorrect
+parameters?
+\item Or is the invocation okay while the student's display of the results actually focuses
+on the wrong aspect of the problem?
+
+\end{itemize}
+
+Mere oral communications
+are completely inadequate to do any of this.
+The student has built (whether he knows that he
+is doing this or not) a computing environment,
+and unless the Professor can enter and use the Student's environment
+{\it in situ}
+as he had built it, the two couldn't possibly
+get a fix on the answers.  But since neither the Student nor the Professor 
+had anticipated
+this issue, it was very hard for the Student to explain the environment
+(algorithms, datasets, etc.) which he had constructed,
+and hard for the Professor to get into it.
+
+\item {\it A Year is a Long Time in this Business.}
+Once, about a year after one of us had done some work and written
+an article, (and basically forgot the details of the work he had done), 
+he had the occasion
+to apply the methods of the article on a newly-arrived dataset.
+When he went back to the old software library
+to try and do it, he couldn't remember how the software
+worked -- invocation sequences, data structures, etc.   In the end,
+he abandoned the project, saying he just didn't have time to get into it anymore.
+
+\item {\it A la R\'echerche des Parametres Perdues .}
+Once, one of us read a paper on wavelets that was very interesting.
+He had a vague idea of what the author of the paper was doing and wanted to
+try it out.  Unfortunately, from the paper itself
+he couldn't figure out what filter coefficients
+and thresholds and similar tuning parameters were being used.
+He spoke the author of the paper, who replied: ``Well, actually,
+the reason we didn't give many details
+in the paper was that we forgot which parameters gave the nice
+picture you see in the published article; 
+when we tried to reconstruct that figure
+using parameters that we thought had been used, we only got
+ugly looking results. So we knew there had been some
+parameter settings which worked well, and perhaps one day
+we would stumble on them again; but we thought it best to
+leave things vague.'' (Note: this story is actually a composite
+of two separate true incidents).
+\end{itemize}
+
+Surely anyone reading the above recognizes the sorts
+of situations that we are talking
+about and has experienced them first-hand.  
+It is not too much to say that these experiences are utterly common;
+they are the dominant experiences of researchers in those fields
+which rely on computational expriments. 
+Researchers in those fields can't reproduce their own work; 
+students in those fields can't explain to their advisers the difficulties they
+are having, 
+and researchers in those fields can't reproduce the work of others.
+
+To people who have {\it only} worked in such fields, this probably
+seems to be just the way
+things are, so much so that this state of affairs is unremarkable.
+
+In the field of wavelets, where we see a mixture of
+researchers from several disciplines, it is easier to take a broader
+perspective and to see the situation as it really is:
+a scandal.  
+
+For a field to qualify as a science, it is important first and foremost
+that published work be reproducible by others.  In wavelets, mathematical
+results are reproducible by others, who must only read and understand
+mathematical proofs to reproduce their validity.  However, computational
+results are not reproducible -- this is the state of affairs
+mentioned above.  So we have a mixture of the scientific and 
+the a-scientific, clearly visible to all. 
+
+\section{The Solution}
+ 
+We are, of course, not the first to call attention to
+this type of situation.
+Jon Claerbout, a distinguished exploration geophysicist at Stanford, has in recent
+years championed the concept of {\it really reproducible research} in the
+``Computational Sciences.''   He has also pointed out that we have reached
+a point where solutions are available -- it is now
+possible to publish computational
+research that is really reproducible by others.  
+The solutions involve a convergence
+on several fronts.
+
+\subsection{Claerbout and Reproducibility}
+
+In order for reproducibility to become widespread, individual
+researchers must be convinced of the
+importance of reproducibility in their work,
+and to plan their work accordingly.  For this, the ideas
+of Claerbout may be convincing.
+
+Claerbout's ideas arose in exploration seismology where the goal is an image of the subsurface, and
+research  aims to produce better images. However, Claerbout has pointed
+out that the research deliverable is
+not the image itself, but instead the {\it software environment} that, applied in the right
+way, produces the image, and which, hopefully, could be applied to other datasets to
+produce equally nice images. The scientific findings may turn out to be a {\it
+knowledge of parameter settings} for this complex software environment that seem to
+lead to good results on real datasets.
+
+With this as background, reproducibility of experiments in seismic exploration requires  having the
+complete software environment available in other  laboratories and the full source
+code available for inspection,  modification, and application under varied parameter
+settings.  
+
+Actually these comments apply to all fields in which mathematical and
+computer science heuristics may {\it suggest} algorithms to be tried on scientific signal
+processing and imaging problems, but mathematical analysis alone is {\it not able} to
+predict fully the behavior and suitability of algorithms for specific datasets.  
+Therefore experiments are necessary and such experiments ought, in principle, to be
+reproducible, just as experiments in other fields of science.
+
+In all such fields, we can distill Claerbout's insight into a slogan: 
+{\it An article about computational science in a
+scientific publication is {\bf not} the scholarship itself, it is merely {\bf
+advertising} of the scholarship.  The actual scholarship is the complete software
+development environment and the complete set of instructions which generated the
+figures.}
+   
+In order to work in accordance with this
+slogan, Claerbout and his colleagues have developed a discipline for building their own
+software, so that from the start, they expect it to be made available to others as
+part of the publication of their work.  Specifically, they publish CD-ROMs
+(available from Stanford University Press) which contain the text of their books
+along with a special viewer that makes those books {\it interactive documents},
+where as one reads the document, each figure is accompanied by the possibility of
+pop-up windows which allow one to interact with the code that generated the figure,
+to ``burn'' the illustration (i.e. erase the postscript  file supplied with the
+distribution),  and to rebuild the figure from scratch performing all the 
+signal and image processing in the software environment that the CD-ROM
+makes available on one's own machine.  By
+following the discipline of planning to  publish in this way from the beginning,
+they maintain all their work  in a form which is easy to make available to others at
+any point in time.
+
+While Claerbout's example is instructive, we don't think that
+the specifics of his approach will be widely adopted.
+Claerbout's project began in 1990 and much has changed in
+the intervening five years.  
+
+\subsection{Internet}
+
+The exponential growth of Internet and 
+of user-friendly access to information via the world-wide-web
+makes it possible to share information with others very efficiently.
+For example, we now have a wavelet digest acces through WWW browsers;
+the Wavelet Digest has links to articles and software being made
+available worldwide, so that now researchers can make  articles
+and supporting information available to others around the world
+24 hours a day. Moreover this availability is not just theoretical;
+it is convenient and rapid.  One can now easily locate and
+download megabytes of information
+over standard telephone lines in minutes. 
+
+\subsection{Freeware} 
+
+Supporting the development of Internet has been
+the appearance of a culture of ``giving software away''.
+A highly visible advocate of this culture is Richard Stallman,
+who has developed the GNU software library and the 
+concepts of ``Freeware'' and ``Copy-Left''.  These
+concepts have helped organize a great deal of internet activity
+around the sharing and development of large bodies of
+software. (Incidentally, Freeware is not necessarily free
+of cost -- it can be sold; the point of Freeware is that it
+can be freely redistributed, under certain conditions.
+Moreover, one can make a living developing Freeware,
+as Stallman has shown).     
+
+\subsection{Quantitative Programming Environments}
+
+The last five years have also seen an explosive growth in the
+ubiquity of quantitative programming environments -- systems
+like Matlab, Mathematica, and S-Plus which manipulate and display data
+on personal computers and scientific workstations
+using high level commands that approximate the way that
+engineers, statisticians and mathematicians speak about 
+tasks they are doing (i.e. ``take the fourier transform of that signal''
+has a fairly one-one translation into any and all of the languages).
+QPE's have been around for a long
+time, and it has long been recognized that they allow very concise
+expression of scientific data processing methods
+and that they allow very rapid prototyping
+of scientific algorithms. However, it was traditionally thought that they
+impose performance penalties which make them unsuitable
+for serious work -- which would therfore have to be done,
+slowly and painfully, in low-level languages.
+As computer workstations have grown in power, the performance penalties
+from using high level languages have become less onerous.  Using
+a QPE on 
+a state-of-the-art workstation gives about the
+same level of performance as using
+labor-intensive, low-level programming on the somewhat slower machine that was 
+state-of-the-art 12 months ago.  
+
+From the standpoint of our major theme -- reproducibility -- QPE's
+are revolutionary because they work the same way on many different PC's and workstations,
+so code developed for QPE's is much more useful
+to others than code custom-developed in low-level languages
+for a single platform.
+
+\subsection{Implications}
+
+Here are the implications for the wavelet community.  
+
+First, it is our
+perception that as we approach specific applications using wavelets, time-frequency
+analysis, we are becoming
+a computational science like seismic imaging.  Performance has
+everything to do with specifics: exactly what was done (which wavelets, which
+coders, which detectors, which corpus of data) with exactly what parameters.  In this
+setting, publishing figures or results without the complete  software environment
+could be compared to a mathematician publishing an announcement of a  mathematical theorem 
+without giving the proof.  Waveleticians ought to publish
+their complete computational environments.
+
+Second, thanks to the Internet, it is easy to publish information.
+One simply makes it available in an automatic fashion which requires no
+intervention on the part of the publisher, and very little effort on
+the part of the user.
+
+Third, because of QPE's, it is possible to publish ambitious
+computational environments in compact form.  A few megabytes
+of code written in the language
+of a QPE is equivalent to hundreds of megabytes
+of code, makefiles and multiple-platform binaries in a low-level language.
+Most computational environments being developed in wavelets and
+related fields could be published over the Internet if implemented in QPE's.
+
+Fourth, one can never require researchers to publish their code.
+But examples like the GNU project show that very bright and
+able people are naturally drawn to share their intellectual
+works with others, and so some researchers will do it.  We believe
+that those who do will do better science than those who don't.
+
+\subsection{WaveLab} 
+
+The system we have built, \WaveLab, is an example
+of the trends we have just identified.
+It is a modest step in the direction of reproducible research.
+
+It is available over the Internet via both a point-and-click Web browser
+and via FTP protocol.  Versions are available for Unix workstations,
+for Macintosh (680X0 and Power Mac) and for PC (Windows).  They are
+compressed archives which install automatically on the user's
+machine using standard tools like {\tt compress} and {\tt  tar} (UNIX) 
+{\tt stuffit} (Mac) and {\tt pkzip} (Windows).  
+The complete package  -- code in \Matlab,
+data, and documentation -- is over two megabytes in compressed form,
+but takes only minutes to access and install, even over telephone
+lines with 14.4 kbps modems.
+
+The package reproduces the figures in our published articles.
+Our system contains a subdirectory, \ScriptDir, which contains
+within it one subdirectory for each article we publish.
+Each directory 
+contains the code which reproduces
+the figures as published in hardcopy form
+as technical reports at Stanford University and in
+forthcoming journal articles.
+Other researchers can therfore obtain the \Matlab code which generated
+these figures, and can reproduce the calculations that
+underly the figures.  They can, if they wish,
+modify our calculations by editing the underlying \Matlab code.
+They can use the algorithms on other datasets,
+or they can try their own favorite methods on the same datasets.
+
+In accord with Claerbout's doctrine, when doing research,
+long before we write an article, we prepare ourselves
+with the thought that {\it what we do on the computer
+will ultimately be made available to others, for their inspection,
+modification, re-use, and criticism}.   This implies
+several things.  First, that the work product which we are
+aiming to create will be a subdirectory of \WaveLab
+containing a series of scripts that will generate,
+from scratch, all the figures of an article.
+Second, that our work product
+is {\it not} the printed figures that go into the article,
+but the underlying algorithms and code which generate
+those figures, and which will be made available to others.
+Thus, it is no good to print a hardcopy of a figure that we see
+on the screen and save that for photocopying into
+a final version of the paper.  Once we are happy with a
+figure we see on the screen, we must save the code
+that generated the figure, and then edit the code
+to make it part of a system that automatically
+reproduces all the figures of an article.
+
+Claerbout, in one
+of his articles, claims that the approach he follows
+takes little effort beyond the learning to file
+away one's work systematically.  We think his assertion
+grossly understates
+the philospohical and practical effort required
+to follow this path of research reproducibility. 
+To work in accordance with this goal, we must decide
+on a discipline
+of how we will structure our computational experiments.  We must
+also then proselytize among others in our group
+to get them to adopt this discipline.
+ 
+On the other hand, the very effort involved
+may be seen to be an advantage.
+It practically ensures that
+we will reduce problems of sloppiness and self-delusion,
+that we will communicate more directly and frequently with
+our students, that our students will be raised up
+with better intellectual habits
+and that our students will do better work.
+The group survival value is high. 
+
+
+% ********** SECTION 2: Contents of WaveLab **********
+\section{The WaveLab Distribution}
+
+We now describe some of the contents of \WaveLab, with an eye
+to communicating just how much effort and attention is called
+for in the effort to maintain reproducibility. 
+
+% *** Capabilities ***
+\subsection{Installation}
+
+\WaveLab, when installed, adds the following directory structure
+to the user's Toolbox path
+
+
+%  JON FILL IN
+
+We now describe some of the key elements of these directories.
+Buried in these directories are more than 700 files of various
+types; due to limited space, we cannot cover them all here.
+(In section 5 below, we give a few examples of \WaveLab in action.)
+
+We would like to emphasize the extent to which the release
+is self-describing, so we extract from the {\tt Contents.m} file
+in the \TTWL main directory.
+
+% JON FILL IN
+
+To give an idea of the contents of individual directories,
+we extract from the {\tt Contents.m} file for the directory
+{\tt WaveLab/Packets} of 1-d cosine packet and wavelet packet tools.
+
+% JON fill in
+
+
+
+\subsection{Complete Environment}
+
+Important point: the \WaveLab distribution
+contains not only \dotm files which implement 
+fundamental algorithms,
+but also a complete environment associated with
+the use of those algorithms.
+
+\subsubsection{Datasets}
+As an example, we cite the inclusion of datasets
+and of artificial signals. The {\tt Contents.m}
+file for directory {\tt WaveLab/Documentation}
+lists the following contents:
+
+% Jon FILL IN
+
+The datasets are provided in a centralized way
+by a central reader, so that to get an
+image of Ingrid Daubechies, one types
+
+% Jon Fill in
+
+while to hear Caruso singing,
+one types
+
+% Jon Fill in
+
+Synthetic signals are provided via
+centralized synthesizers
+
+% Jon Fill in example
+
+Distribution of datasets is a crucial
+part of reproducibility.  It is also important
+for our work together at Stanford, because
+it gives us some common examples that we all know
+about.  Sadly, free distribution of datasets is
+far less widespread even than free distribution of software.
+ 
+\subsubsection{Documentation}
+
+A complete computational environment includes
+on-line documentation.  In \WaveLab
+we handle this several ways.
+
+\begin{enumerate}
+\item
+As we have seen, {\tt Contents.m} files
+summarize the contents of individual directories.
+
+\item Each individual function contains its own
+help, in accordance with \Matlab standards.
+Here is an example:
+
+% Jon Fill in Best Basis
+
+\item The first line of each help-header (H1 Line) gives
+information which is searchable by the \Matlab
+command {\tt lookfor}.
+
+Items 1-3 are standard with \Matlab toolboxes. The next few are less
+standard.
+
+\item In the documentation directory
+there are files, compiled automatically
+as a release is built, giving alphabetical
+listings of all functions in \WaveLab,
+their synopses and their H1 Lines.
+
+\item A \WaveLab Reference gives %Jon Fill in
+
+\item A \WaveLab Architecture guide
+gives % Jon fillin
+
+\item Toons gives % Jon fill in
+
+\end{enumerate}
+
+If \WaveLab were a commercial product,
+it would make sense to include tutorials
+and other resources for beginners.
+Instead, we include only documentation
+related to performing our {\it research} and sharing
+our research with others. Writing documentation makes our own software
+better -- the documentation process often uncovers
+subtle bugs -- and helps others check
+our work and evaluate the quality of our algorithms.
+Tutorials do not seem to be of much value to our research agenda.
+   
+% *** Architecture ***
+\subsection{Architecture of the Distribution}
+
+% Source
+\subsubsection{Source}
+
+% Build
+\subsubsection{Build}
+
+% Internet Support
+\subsubsection{Internet Support}
+
+\subsection{Maintenance}
+
+% ********** SECTION 3: EXAMPLES **********
+\section{Examples}
+
+In this section we give a brief idea of some of the capabilities
+of \WaveLab, by illustrating some of the figures we have
+created as part of our recent research.  
+A key point: all the figures in this
+article can be reproduced by obtaining version .700 of \WaveLab
+and using the files in {\tt Papers/VillardDeLans}.
+Many other figures can be reproduced; see the \WaveLab
+distribution, or the published articles 
+\cite{IdealSpatial,Asymptopia,ShortCourse,Blocky,Toulouse}.
+
+% *** Wavelets ***
+\subsection{Wavelets}
+
+\WaveLab of course offers a full complement of
+wavelet transforms -- both the standard orthogonal
+periodized wavelet transforms {\tt FWT\_PO} \cite{Daubechies}, standard boundary-corrected
+wavelet transforms {\tt FWT\_CDJV} \cite{CDJV}, and the
+standard periodized biorthogonal wavelets
+{\tt FWT\_PBS} \cite{CDF}.  It also offers less standard wavelet transforms
+which have been developed as part of research
+at Stanford.  Two examples include interpolating
+wavelet transforms based on interpolation schemes
+({\tt FWT\_DD} for what we call ``Deslaurier-Dubuc
+wavelets'' \cite{Interpolating}) and average-interpolating wavelet transforms
+({\tt FWT\_AI} \cite{Blocky}). 
+
+Less standard is the wavelet transform based
+on the Meyer Wavelet. Eric Kolaczyk has developed {\tt FWT\_YM} 
+as part of his Thesis \cite{EKThesis}
+Figure 1 shows a Meyer wavelet with third-order polynomial
+window function.
+It was produced by the code fragment:
+
+% Compression Example
+\subsection{Compression Example}
+
+There has been a lot of interest recently
+in the use of wavelets for data compression \cite{ABMD,DeJaLu}.
+\WaveLab offers a range of discrete trigonometric transforms
+({\tt dct\_ii},{\tt dct\_iii}, {\tt dct\_iv}, {\tt dst\_ii}, and 
+{\tt dst\_iii}) \cite{W}.  It is therefore quite
+easy to compare standard trigonometric transforms with 
+standard wavelet transforms as far as compression goes.
+
+For the purposes of this article, we will call 
+transform-based compression
+the act of going into the transform domain, setting to zero
+all but a few percent of the coefficients, and returning to the
+original domain.  A full compression scheme would require
+various coders to optimally store the nonzero coefficients in
+the transform domain, but it is well-established that the
+total number of bits used and the quality of reconstruction
+after such processing correlate well with the performance in the
+simpler definition of transform compression here.
+
+Figure 2 shows a side-by-side comparison
+of an seismic signal, its 95% compression
+using wavelets and its 95% compression using DCT.
+It is produced by the following code fragment.
+
+Figure 3 shows a side-by-side comparison
+of an image of Ingrid Daubechies treated to 95%
+compression in the wavelet domain and to 95% compression
+in the DCT domain.
+It is produced by the following code fragment.
+
+In both cases the visual superiority of wavelets is evident.
+
+% *** De-Noising ***
+\subsection{De-Noising}
+
+Our own research in wavelets began with interest in 
+the applications of wavelet to removing noise from
+signals and images, and in particular learning how best to do
+this with wavelet thresholding. As our research has
+evolved we have tried new approaches -- {\it second-generation
+de-noising}.  One of these, described \cite{CoifmanDonoho}
+is the use of translation-invariant approaches to de-noising.
+
+Figure 4 below shows the use of a Stationary Haar transform
+for de-noising a noisy version the signal Blocks. For comparison,
+the standard Haar transform is also included.  
+The improvement in accuracy is evident.
+The figure was produced by the codebody below,
+which invokes the translation-inevariant wavelet
+transform.
+
+% *** Wavelet Packet Artificats ***
+\subsection{Wavelet Packet Artifacts}
+
+Currently, much of the interest and attention
+of the wavelets community is focused on the
+use of wavelet packets and cosine packets.
+The very elegant theories behind these approaches,
+due to Coifman, Meyer and Wickerhauser,
+have not yet been developed into a full-scale methodology,
+where the difficulties in applications
+are catalogued, well-understood and avoided.
+Using \WaveLab,
+we have been able to identify a number of anomalies and
+artifacts associated with the best-basis and wavelets
+approaches.  Others can easily reproduce and study these
+examples, and think of ways to avoid them. 
+
+
+The first example has to do with
+an artifact of wavelet packets caused when the signal
+of interest concentrates near a frequency with simple
+ dyadic structure.  The signal {\tt tweet} that comes with \WaveLab
+was provided by Doug Jones of the university of Illionois.
+When we tried to analyze it by Wavelet Packets, we got the
+time-frequency phase plane shown in figure 5a below.
+In contrast when we tried to analyse it by Cosine Packets,
+we got the phase plane in Figure 5b.
+
+The Cosine Packets phase plane is dramatically clearer,
+and shows quite clearly the chirping structure of the bird's
+song.  Wavelet Packets fail in this case because the bird's
+natural pitch is nearly half the Nyquist rate for the signal
+sampling, which is the worst possible choice for wavelet packets.
+
+The second example has to do with choice of entropy.
+Most people use the Coifman-Wickerhauser original choice of entropy,
+or ``Shannon Entropy''.  However, we are unaware
+of any specific rationale for this choice
+of entropy which can be tied to performance.
+In fact, other entropies can often perform
+better. Based on work in \cite{ChenDonoho}
+we often prefer the $\ell^1$ norm as an entropy.
+
+In Figure 6 below we show the phase plane for the artificial
+signal ``WernerSorrows'' obtained using two different
+entropies.  The Coifman-Wickerhauser entropy chooses
+as best basis a global Fourier basis, and the time-varying
+structure of the signal is completely lost (Figure 6a).  The $\ell^1$
+entropy chooses a time-varying basis and the resulting
+time-varying structure is revealed (Figure 6b).
+ 
+% *** Matching Pursuit Artifacts ***
+\subsection{Matching Pursuit Artifacts}
+
+Matching Pursuit \cite{MZ} is a popular method for non-orthogonal decomposition;
+using \WaveLab we have found some interesting computational
+results.  When MP is applied to the Tweet Signal
+of Figure 5a using the same Cosine Packet dictionary as in Figure 5b,
+we see that the nonorthogonal decomposition found
+by MP is markedly less clear than that found by BOB.
+In this case MP is too adaptive.
+ 
+% *** Deconvolution Experiments ***
+\subsection{Minimum Entropy Focusing}
+
+We now give examples of some experiments which are easy to conduct in \WaveLab.
+The first was based on the idea of determining if one could measure
+image sharpness from the wavelet transform -- at least well
+enough to provide an auto-focus mechanism.
+
+In order to test this idea, we took the object {\tt Blocky},
+which is an artificial signal built in to \WaveLab, and blurred it
+out.  The blurring filter for this experiment
+was the two term autoregressive filter
+$y_t -2 \rho y_{t-1} +  \rho^2  y_{t-2}  = x_t  $.  The parametrized family of 
+three term FIR filters $(b^\tau * y )_t = y_t  -2 \tau y_{t-1} +  \tau^2  y_{t-2}$ 
+contains the
+inverse of the first filter as a special case, by taking $\tau = \rho$.
+How can we find, from the data alone, information guiding us
+to deconvolve by picking $\tau$ appropriately?
+
+In our deblurring experiment, we tried
+a method of minimum wavelet-domain entropy.
+We set $\rho= .9$, and for each
+$\tau$ in a grid, we evaluated the normalized 
+wavelet-domain entropy, searching for a minimum
+\[
+     \min_\tau {\cal E} ( WT[b^{(\tau)} x] ) .
+\]
+Here the entropy is a normalized $\ell^1$ entropy
+of the fine scale coefficients:
+\[
+     {\cal E} (w) =  \sum_{j \geq 3} |w_{j,k}|
+\]
+Figure 7 shows that when we searched through $\tau$ in the grid
+$\{ -1, -.9, \dots , .8, .9, 1\}$,
+the selected minimum was in fact $.9$ -- just as one would hope.
+
+Figure 8 shows the original, blurred, and restored signal.
+In this experiment, a criterion of minimum entropy in the wavelet
+domain identified the correct deblurring filter -- {\it blindly}.
+
+% *** Tree Experiments ***
+\subsection{Tree-Constrained Thresholding}
+
+De-noising by wavelet thresholding acts essentially to keep or
+kill certain wavelet coefficients. 
+The coefficients which survive often
+exhibits a certain pattern: a coefficient at a finer
+scale never survives thresholding unless
+its parent also survives. 
+
+This suggests that one might profitably {\it require} this hereditary pattern
+of surviving wavelet coefficients i.e. {\it require that surviving wavelet
+coefficients must be in a tree pattern}.  One could aim at finding
+the {\it best tree pattern} by an optimization.
+When using an orthonormal wavelet transform, keep/kill
+according to a tree
+pattern corresponds to projection on a certain linear subspace
+associated with the tree.  Finding
+the best projection to use (in terms of minimizing mean squared error)
+is what statisticians call model selection.  One could therefore
+search for the tree which does best according to a 
+classical model selection criterion.  
+Letting $y_T$ denote the least-squares projection of the
+data on the linear subspace associated with the tree, we define
+\[
+      CPRSS_\lambda (y,T) = \| y - y_T \|_2^2 + \lambda \cdot \#(T)
+\]
+We propose model selection by finding the tree that 
+minimizes $CPRSS_\lambda$.
+Standard AIC model selection uses $\lambda=2$, BIC uses
+$\lambda = \log(n)$, and RIC uses $2 \log(n)$.
+The calculations are surprisingly easy, and involve
+analogs of the Coifman-Wickerhauser pruning algorithm.
+We illustrate the results in Figure 9 below on a noisy version
+of object {\tt Blocks}, using a Haar transform.
+
+% insert figure 9
+
+In terms of RMS error, BIC outperforms both AIC and RIC
+in this case, and BIC also outperforms, in this case, the
+automatically adaptive thresholding (SUREShrink)
+of Donoho and Johnstone \cite{AdaptSmooth}.
+
+% ********** Section 5: Future Issues **********
+\section{Discussion and Acknowledgements}
+
+
+% *** Reproducibility and New Electronic Journals ***
+\subsection{Future of Reproducibility}
+
+``Really reproducible research'' is  a very ambitious goal
+which is only partially addressed by our work.  
+We have lowered the effort required for 
+others to reproduce a specific figure or batch of figures 
+in our papers.  In the {\it ancien r\'egime} this would have required
+several man-weeks of work -- the work of programming similar algorithms,
+testing them for correctness and applying them to similar data --
+while in our brave new world it takes less than an hour -- the work of locating,
+downloading and installing some software.
+The new approach is several orders of magnitude less work than the older
+approach.
+
+Things can still improve by at least two more orders of magnitude.
+
+{\it Integrating Reproducibility into Scientific Publication.} 
+People sometimes forget
+that the current norms of scientific publication did not spring fully formed into
+widespread practice.  We have read that Pasteur had the revolutionary idea to advance
+reproducibility in the biological sciences by adding sections to articles which gave
+{\it Materials}, {\it Procedures}, {\it Methods of Analysis}, and so on.  
+The idea of carefully spelling out how a biological experiment
+was performed, and the nature of the biological specimens employed,
+seems so natural and automatic today.  
+But at one time such information was not
+provided as part of scientific publication; after Pasteur,
+the accepted norms changed, and such information
+was furnished as a routine part of publication.
+
+In the future, we can envision that publication in computational
+sciences will change so that reproducibility is
+integrated into process.  One way to do this would
+be if journals were fully electronic, and if we adopted
+hypermedia techniques.  Then every
+computationally generated figure and every computationally-generated
+table in an article would become linked to the code and the computational
+environment that produced the figure.  If one were interested
+in a figure, one would click on it with a mouse, and
+a new window would instantly appear, containing the code
+that the author of the article used to create the figure.
+To reproduce the figure, but perhaps change slightly the
+settings of the display software (for example, to view a surface
+from a different 3-d perspective) one would simply edit the code in the
+window and re-run the code; the figure would be re-computed and re-displayed.
+
+We envision this as being two orders of magnitude easier than the
+current approach for these reasons:
+
+\bitem
+\item Universality.  There would be a universal user interface
+to such electronic publications that everyone understood, and the
+underlying code generating figures would be in a QPE language that
+everyone understood. The reader would not have to learn a new
+QPE language in order to reproduce work of some other researcher.
+
+\item Transparency. The reader would only be involved
+in the act of reading the
+electronic journal and clicking on a few buttons.
+The reader would not have to ``purchase a QPE'',
+``download software'' or ``install software''. The QPE would
+be freely distributable under a freeware arrangement
+like the GNU public liscence -- one
+wouldn't buy it.  The QPE wouldn't be consciously ``installed''
+by the user, but instead would be automatically installed
+by the browser which displayed the electronic journal. The software
+which reproduced the figure would  not have to be ``located'' by the user
+on some distant internet host and then
+``downloaded'' onto the user's machine; instead the browser of
+the electronic journal would locate the software somewhere on
+the internet, download and install it.
+
+\eitem 
+The current scheme of reproducibility under \WaveLab does not measure
+up to this vision.
+\bitem
+\item  The code that reproduces the figures is not integrated into
+a viewer of the articles.
+\item The user must own and install \Matlab (which is much more
+expensive than most PC software).
+\item \Matlab is not a universal QPE.  
+Many others are in common use.
+\item The user must find, download, and install the \WaveLab system.
+\item The user must locate, within \WaveLab, the Figure he wants.
+\eitem
+Answering all these obstacles, by meeting the goals of Transparency
+and Universality, will make reproducibility achievable in
+10 seconds or less rather than in 1 hour -- this is the two-order
+of magnitude gain we wrote of above.
+
+There are some interesting developments that point in the direction
+we envision. 
+
+Claerbout's group at Stanford has implemented a system that goes
+reasonably far in this direction -- they have developed a custom TeX viewer
+and a set of supporting tools so that one can burn and
+rebuild illustrations and they have developed an interactivity facility,
+where dials or sliders are attached to parameters of a figure
+and one interactively changes the figure under the control
+of those dials or sliders.  There are of course
+ways in which this pioneering effort fails to
+be the universal solution. 
+The system does not use a universal QPE,
+doesn't work on PC's and Mac's, 
+and lacks the full editability features we wrote of above.
+Howver, it is freely distributable and is extremely inspiring.
+ 
+In another direction, commercial QPE's like Mathematica
+and \Matlab have developed Notebook interfaces which are somewhat
+in the direction of ``click on a figure and see the source that
+generated it''. Perhaps they can be more tightly integrated into
+scientific journal publication.
+
+Finally, the OAK project at Sun Microsystems has the promising
+goal of creating a computing language which is network-based,
+in which one never ``purchases'', ``downloads'', or ``installs''
+software -- it is just located, installed, and run seamlessly,
+automatically.  An electronic journal browser implemented
+in OAK, together with a QPE implemented in OAK, would form the foundation to
+realize the vision described above.
+
+\subsection{Goals for Statisticians}
+
+Historically, Statisticians have been heavily involved in the methodology
+of science, which includes data presentation,
+data visualization, and conduct of scientific
+experiments.  However, the postwar era has mostly emphasized
+Statistics as a branch of {\it applied stochastics}.  Successful
+efforts by Statisticians to develop software packages and
+visualization tools show that Statistics is more than
+just applied stochastics. (Admittedly there would
+be some controversy in France and Belgium on this
+score, while the point would be more easily accepted
+in the UK and USA.)  We would like to encourage Statisticians
+reading this article to attend to the
+the development of ``the scientific method'' in all its guises.
+The effort towards ``really reproducible research'' is worth further effort.
+
+\subsection{Acknowledgements}
+
+Jon Buckheit's graduate studies
+have been partially supported by an NSF graduate support program.
+David Donoho's research has been partially supported by
+NSF DMS 92-09130, by a university interchange agreement
+with the NASA Astrophysics Data Program and by other sponsors.
+
+The authors would like to thank Anestis Antoniadis
+for his unstinting efforts in organizing the {\it XV Rencontres
+Franco-Belges}.
+Professor Antoniadis also asked us to write this article,
+though he bears no blame for the result.
+
+% ********** REFERENCES **********
+
+\begin{thebibliography}{99}
+
+\bibitem{ABMD}
+Antonini, M., Barlaud, M., Mathieu, P. and Daubechies, I. (1991)
+Image coding using wavelet transforms,
+{\it IEEE Proc. Acoustics, Speech, Signal Processing}, to appear.
+
+\bibitem{BD}
+Buckheit, J.B. and Donoho, D.L. (1995).  A Cartoon Guide to Wavelets.
+Technical Report, Department of Statistics, Stanford University.
+
+\bibitem{CD}
+Chen, S. and Donoho, D.L. (1994) On Basis Pursuit.
+Technical Report, Department of Statistics,
+Stanford University.
+
+\bibitem{ChenDonoho}
+Chen, S. and Donoho, D.L. (1995) Atomic Decomposition by Basis Pursuit.
+Technical Report, Department of Statistics,
+Stanford University.
+
+\bibitem{Claerbout}
+Claerbout, Jon. (1994).  Hypertext Documents about Reproducible Research.
+{\tt http://sepwww.stanford.edu/sep/jon/blurb.html} and {\tt nrc.html}.
+
+\bibitem{CDF}
+Cohen, A., Daubechies, I., Feauveau, J.C. (1990).
+Biorthogonal bases of compactly supported wavelets.  
+To appear, {\it Comm. Pure Appl. Math.}
+
+\bibitem{CDJV}
+Cohen, A., Daubechies, I., Jawerth, B., and Vial, P. (1992).
+Multiresolution analysis, wavelets, and fast algorithms on an
+interval.  To appear, {\it Comptes Rendus Acad. Sci. Paris} (A).
+
+\bibitem{CoifmanDonoho}
+Coifman, R.R. and Donoho, D.L. (1995)
+Translation-Invariant De-Noising.
+{\it This Volume}.
+
+\bibitem{CM}
+Coifman, R.R. and Meyer, Y.
+``Remarques sur l'analyse de Fourier \`{a} fen\^{e}tre,''
+{\it Comptes Rendus Acad. Sci. Paris} (A) {\bf 312} (1991) 259-261.
+
+\bibitem{CMW}
+Coifman, R.R., Meyer, Y. and Wickerhauser, M.V. (1992).
+``Wavelet analysis and signal processing,''
+pp.~153--178 in {\em Wavelets and Their Applications},
+M.~B. Ruskai et~al. (eds.), Jones and Bartlett, Boston.
+
+\bibitem{CW}
+Coifman, R.R. and Wickerhauser, M.V.
+``Entropy-based algorithms for best-basis selection.''
+{\it IEEE Trans. Info. Theory} {\bf 38} (1992) 713-718.
+
+\bibitem{Ingrid92}
+Daubechies, I. (1992)
+{\it Ten Lectures on Wavelets}
+Philadelphia: SIAM.
+
+\bibitem{DeJaLu}
+DeVore, R.A., Jawerth, B., and Lucier, B.J. (1992)
+Image compression through wavelet transform coding.
+{\it IEEE Trans. Info Theory.} {\bf 38},2,719-746. 
+
+\bibitem{Blocky}
+Donoho, D.L. (1993).
+Smooth Wavelet Decompositions with Blocky Coefficient
+Kernels.  in {\it Recent Advances in Wavelet Analysis},
+L. Schumaker and F. Ward, eds. Academic Press.
+
+\bibitem{Interpolating}
+Donoho, D.L. (1992).
+Interpolating Wavelet Transforms. 
+
+\bibitem{Blocky}
+Donoho, D.L. (1993).
+Smooth Wavelet Decompositions with Blocky Coefficient
+Kernels.  in {\it Recent Advances in Wavelet Analysis},
+L. Schumaker and F. Ward, eds. Academic Press.
+
+\bibitem{ShortCourse}
+Donoho, D.L. (1993)
+{ Nonlinear Wavelet Methods for Recovery
+of Signals, Images, and Densities from
+noisy and incomplete data},
+in {\it Different Perspectives on Wavelets},
+I. Daubechies, ed. American Mathematical Society, Providence, RI.
+
+\bibitem{Toulouse}
+Donoho, D.L. (1993).
+Wavelet Shrinkage and W.V.D. -- A Ten-Minute Tour,
+in {\it Progress in Wavelet Analysis and Applications.}
+Y. Meyer and S. Roques, Eds. \'Editions Fronti\`eres, Gif-sur-Yvette.
+
+\bibitem{MinEntSeg}
+Donoho, D.L. (1994).
+On Minimum Entropy Segmentation,
+in {\it Wavelets: Theory, Algorithms and Applications.}
+C.K. Chui, L. Montefusco and L. Puccio, Eds.
+Academic Press, San Diego.
+
+\bibitem{IdealSpatial}
+D.L. Donoho and I.M. Johnstone (1994)
+Ideal spatial adaptation via wavelet shrinkage.
+{\it Biometrika}, {\bf 81}, 425-455.
+
+\bibitem{AdaptSmooth}
+D.L. Donoho and I.M. Johnstone (1994)
+Adapting to Unknown Smoothness by Wavelet Shrinkage
+{\it Journ. Amer. Stat. Assn.} to appear.
+
+\bibitem{IdealTimeFreq}
+Donoho, D.L. and Johnstone, I.M (1995). Ideal Time-Frequency
+Denoising. Technical Report, Department of Statistics,
+Stanford University.
+
+\bibitem{DJKP}
+Donoho, D.L., I.M. Johnstone, G. Kerkyacharian and D. Picard (1993).
+Wavelet Shrinkage: Asymptopia.  To appear in {\it J. Roy. Statist. Soc.\/}.
+
+\bibitem{EricThesis}
+Kolaczyk, E. (1994). WVD solution of Inverse Problems.
+Ph.D. Thesis, Stanford University.
+
+\bibitem{YMeyerEasy}
+Meyer, Y. {\it Wavelets: Algorithms and Applications}
+SIAM: Philadelphia, 1993.
+
+\bibitem{MZ}
+Mallat, S. and Zhang, S. (1993).   Matching Pursuits with
+Time-Frequency Dictionaries.  {\it IEEE Transactions on
+Signal Processing,} 41(12):3397-3415.
+
+\bibitem{W}
+Wickerhauser, M.V. (1994).
+{\it Adapted Wavelet Analysis, from Theory to Software}.  AK Peters: Boston.
+
+\end{thebibliography}
+
+\end{document}
